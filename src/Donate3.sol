@@ -6,6 +6,8 @@ pragma solidity >= 0.6.0 < 0.9.0;
 // This will be updated in a future commit to enable project owners to be able do this directly
 
 import {Donate3Library} from "./Donate3Library.sol";
+// added this import because of the getVersion() function I added newly
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 error Donate3__UnAuthorized();
 
@@ -76,6 +78,12 @@ contract Donate3 {
         uint256 ethPrice = Donate3Library.getETHPrice();
         uint256 usdBal = (ethBal * ethPrice) / 1e18;
         return usdBal;
+    }
+
+    // added this function so I can practice writing tests
+    function getVersion() public view returns (uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
+        return priceFeed.version();
     }
 
     modifier onlyAdmin() {

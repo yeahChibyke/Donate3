@@ -18,6 +18,7 @@ contract Donate3Test is Test {
 
     function testAdminIsMsgSender() public {
         console.log(donate3.i_admin());
+        console.log(address(this));
         console.log(msg.sender);
         // assertEq(donate3.i_admin(), msg.sender);
         // This test will fail because Donate3Test is the contract that deployed the donate3 address
@@ -27,5 +28,10 @@ contract Donate3Test is Test {
         // msg.sender = us
         // i_admin = Donate3Test
         assertEq(donate3.i_admin(), address(this));
+    }
+
+    function testPriceFeedVersionIsAccurate() public {
+        uint256 version = donate3.getVersion();
+        assertEq(version, 4);
     }
 }
