@@ -14,7 +14,6 @@ error Donate3__UnAuthorized();
 contract Donate3 {
     using Donate3Library for uint256;
 
-    //
     uint256 public constant MIN_DONATION = 100e18;
 
     // list of donors addresses
@@ -25,33 +24,37 @@ contract Donate3 {
 
     address public immutable i_admin;
 
-    constructor() {
+    // refactored #1
+    AggregatorV3Interface private s_priceFeed;
+
+    constructor(address priceFeed) {
         i_admin = msg.sender;
+        s_priceFeed = AggregatorV3Interface(priceFeed);
     }
 
     function donateBTC() public payable {
-        require(msg.value.btcInUSD() >= MIN_DONATION, "BTC amount is too low!");
+        require(msg.value.btcInUSD(s_priceFeed) >= MIN_DONATION, "BTC amount is too low!");
         donors.push(msg.sender);
         addressToDonation[msg.sender] += msg.value;
     }
 
-    function donateETH() public payable {
-        require(msg.value.ethInUSD() >= MIN_DONATION, "ETH amount is too low!");
+    /** function donateETH() public payable {
+        require(msg.value.ethInUSD(s_priceFeed) >= MIN_DONATION, "ETH amount is too low!");
         donors.push(msg.sender);
         addressToDonation[msg.sender] += msg.value;
-    }
+    } **/
 
-    function donateGBP() public payable {
-        require(msg.value.gbpInUSD() >= MIN_DONATION, "GBP amount is too low!");
+    /** function donateGBP() public payable {
+        require(msg.value.gbpInUSD(s_priceFeed) >= MIN_DONATION, "GBP amount is too low!");
         donors.push(msg.sender);
         addressToDonation[msg.sender] += msg.value;
-    }
+    } **/
 
-    function donateEUR() public payable {
-        require(msg.value.eurInUSD() >= MIN_DONATION, "EUR amount is too low!");
+    /** function donateEUR() public payable {
+        require(msg.value.eurInUSD(s_priceFeed) >= MIN_DONATION, "EUR amount is too low!");
         donors.push(msg.sender);
         addressToDonation[msg.sender] += msg.value;
-    }
+    } **/
 
     function withdraw() public onlyAdmin {
         // the onlyAdmin modifier requires only admin to be able to withdraw
@@ -68,23 +71,42 @@ contract Donate3 {
         require(callSuccess, "Call failed!");
     }
 
-    function getETHBal() public view onlyAdmin returns (uint256) {
+    /** function getETHBal() public view onlyAdmin returns (uint256) {
         uint256 ethBal = address(this).balance;
         return ethBal;
-    }
+    } **/
 
-    function getUSDBal() public view onlyAdmin returns (uint256) {
+    /** function getUSDBal() public view onlyAdmin returns (uint256) {
         uint256 ethBal = address(this).balance;
         uint256 ethPrice = Donate3Library.getETHPrice();
         uint256 usdBal = (ethBal * ethPrice) / 1e18;
         return usdBal;
-    }
+    } **/
 
     // added this function so I can practice writing tests
     function getVersion() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-        return priceFeed.version();
+        return s_priceFeed.version();
     }
+
+    // added this function so I can practice writing tests
+    function getBTCDecimal() public view returns (uint8) {
+        return s_priceFeed.decimals();
+    }
+
+    // added this function so I can practice writing tests
+    /** function getETHDecimal() internal view returns (uint8) {
+        return s_priceFeed.decimals();
+    } **/
+
+    // added this function so I can practice writing tests
+    /** function getGBPDecimal() internal view returns (uint8) {
+        return s_priceFeed.decimals();
+    } **/
+
+    // added this function so I can practice writing tests
+    /** function getEURDecimal() internal view returns (uint8) {
+        return s_priceFeed.decimals();
+    } **/
 
     modifier onlyAdmin() {
         // require(msg.sender == i_admin, "Must be Admin!");
@@ -98,15 +120,15 @@ contract Donate3 {
 
     receive() external payable {
         donateBTC();
-        donateETH();
+        /** donateETH();
         donateEUR();
-        donateGBP();
+        donateGBP(); **/
     }
 
     fallback() external payable {
         donateBTC();
-        donateETH();
+        /** donateETH();
         donateEUR();
-        donateGBP();
+        donateGBP(); **/
     }
 }

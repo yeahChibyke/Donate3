@@ -3,12 +3,15 @@ pragma solidity >= 0.6.0 < 0.9.0;
 
 import {Test, console} from "forge-std/Test.sol";
 import {Donate3} from "../src/Donate3.sol";
+import {DeployDonate3} from "../script/DeployDonate3.s.sol";
 
 contract Donate3Test is Test {
     Donate3 donate3;
 
     function setUp() external {
-        donate3 = new Donate3();
+        // donate3 = new Donate3();
+        DeployDonate3 deployDonate3 = new DeployDonate3();
+        donate3 = deployDonate3.run();
     }
 
     function testMIN_DONATIONIsHundred() public {
@@ -27,11 +30,16 @@ contract Donate3Test is Test {
         // i.e., Us ->(calls) Donate3Test ->(deploys) donate3
         // msg.sender = us
         // i_admin = Donate3Test
-        assertEq(donate3.i_admin(), address(this));
+        assertEq(donate3.i_admin(), msg.sender);
     }
 
     function testPriceFeedVersionIsAccurate() public {
         uint256 version = donate3.getVersion();
         assertEq(version, 4);
+    }
+
+    function testBTCDecimalIsEight() public {
+        uint256 decimal = donate3.getBTCDecimal();
+        assertEq(decimal, 8);
     }
 }

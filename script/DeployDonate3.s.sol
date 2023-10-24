@@ -7,7 +7,8 @@ import {Donate3} from "../src/Donate3.sol";
 contract DeployDonate3 is Script {
     function run() external returns (Donate3) {
         vm.startBroadcast();
-        Donate3 donate3 = new Donate3();
+        Donate3 donate3 =
+        new Donate3(0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43);
         vm.stopBroadcast();
         return donate3;
     }
