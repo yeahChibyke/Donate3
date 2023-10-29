@@ -69,6 +69,25 @@ function donateEUR() public payable {
     }
 ```
 
+#### `withdraw()`
+
+```javascript
+    function withdraw() public onlyAdmin {
+        for (uint256 donorIndex = 0; donorIndex < donors.length; donorIndex++) {
+            address donor = donors[donorIndex];
+            addressToDonation[donor] = 0;
+        }
+        donors = new address[](0);
+        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Call failed!");
+    }
+```
+
+* The `onlyAdmin` modifier requires only Admin to be able to withdraw
+* A for loop is used to reset the `addressToDonation` mapping down to zero
+* The for loop resets the amount in each address at a particular index to zero, starting from the zero index
+* To reset the array, we use the *new* keyword to reset the donors array to a blank new address array
+
 ### Test
 
 ```shell
