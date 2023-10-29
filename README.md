@@ -1,19 +1,26 @@
-## Foundry
+## Donate3 💸
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**Donate3 is the future of crowd donation.**
 
-Foundry consists of:
+Users can donate using any of the following functions:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+-   `donateBTC()`: This function enables users to donate with BTC.
+-   `donateETH()`: This function enables users to donate with ETH.
+-   `donateGBP()`: This function enables users to donate GBP.
+-   `donateEUR()`: This function enables users to donate EUR.
+-   `withdraw()`: This function can only be called by the Admin. In a future update `projectOwner` will also be able to call this function.
 
-## Documentation
+## Library
 
-https://book.getfoundry.sh/
+[Donate3Library](https://github.com/yeahChibyke/Donate3/blob/main/src/Donate3Library.sol)
+
+## Modifier
+
+`onlyAdmin()`: Any function declared with this modifier can only be called by the Admin (owner of the contract).
 
 ## Usage
+
+After the contract is deployed, users can interact with it and call any of the fund functions via a frontend interface (which will come in a later update). Users must have a web3 wallet connected
 
 ### Build
 
